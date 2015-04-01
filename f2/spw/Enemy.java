@@ -16,9 +16,19 @@ public class Enemy extends Sprite{
 	private int step = 12;
 	private boolean alive = true;
 	
+	private Image image;
+	private String path; 
+
 	public Enemy(int x, int y) {
-		super(x, y, 5, 20);
-		
+		super(x, y, 70, 70);
+
+		path = "D:/GitHub/spw/f2/spw/Image/bomb.png";//location image
+		try{
+			image = ImageIO.read(new File(path));//read file bomb to image
+
+		}catch(IOException e){//focus input output
+			e.printStackTrace();
+		}// check error for run program
 	}
 
 	@Override
@@ -29,9 +39,9 @@ public class Enemy extends Sprite{
 			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 
 					(float)(Y_TO_DIE - y)/(Y_TO_DIE - Y_TO_FADE)));
 		}
-		g.setColor(Color.GREEN);
-		g.fillRect(x, y, width, height);
-		
+		// g.setColor(Color.GREEN);
+		// g.fillRect(x, y, width, height);
+		g.drawImage(image,x,y,width,height,null);
 	}
 
 	public void proceed(){
