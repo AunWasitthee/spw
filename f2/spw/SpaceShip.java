@@ -24,20 +24,31 @@ public class SpaceShip extends Sprite{
 			e.printStackTrace();
 		}// check error for run program
 	}
-
+	//function draw graphic Spaceship
 	@Override
 	public void draw(Graphics2D g) {
 		// g.setColor(Color.WHITE);
 		// g.fillRect(x, y, width, height);
 		g.drawImage(image,x,y,width,height,null);
 	}
+	//Funcytion move Space ship
+	public void move(int directionX, int directionY){
 
-	public void move(int direction){
-		x += (step * direction);
+		//Calculate positionX, positionY of Spaceship
+		x += (step * directionX);
+		y += (step * directionY);
+
+		//Condition check out of Frame
+		//X-ais
 		if(x < 0)
 			x = 0;
 		if(x > 400 - width)
 			x = 400 - width;
+		//Y-ais
+		if( y <= 30 )
+			y = 30;
+		if(y >= 600 - height)
+			y = 600 - height;
 	}
 
 }

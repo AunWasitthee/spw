@@ -21,7 +21,7 @@ public class GameEngine implements KeyListener, GameReporter{
 	
 	private long score = 0;
 	private double difficulty = 0.1;
-	
+	private boolean statusGame = true;
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
 		this.v = v;		
@@ -82,17 +82,37 @@ public class GameEngine implements KeyListener, GameReporter{
 	public void die(){
 		timer.stop();
 	}
-	
+	//Function for pause game.
+	public void pauseGame(){
+		statusGame = !statusGame;
+		if(!statusGame){
+			timer.stop();
+		}
+		else{
+			timer.start();
+		}
+		
+	}
+	//function control game for user's input (keyboard)
 	void controlVehicle(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
-			v.move(-1);
+			v.move(-1,0);  // Move Left
 			break;
 		case KeyEvent.VK_RIGHT:
-			v.move(1);
+			v.move(1,0);  // Move Right
+			break;
+		case KeyEvent.VK_UP:
+			v.move(0,-1);  // Move Up
+			break;
+		case KeyEvent.VK_DOWN:
+			v.move(0,1);  // Move Down
+			break;
+		case KeyEvent.VK_P:
+			pauseGame();  // Pause Game
 			break;
 		case KeyEvent.VK_D:
-			difficulty += 0.1;
+			difficulty += 0.1; // Up level
 			break;
 		}
 	}
