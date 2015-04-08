@@ -15,12 +15,16 @@ public class GameEngine implements KeyListener, GameReporter{
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
+	private ArrayList<Heart> heart = new ArrayList<Heart>();	
+	private ArrayList<Star> star = new ArrayList<Star>();	
 	private SpaceShip v;	
 	
 	private Timer timer;
 	
 	private long score = 0;
 	private double difficulty = 0.1;
+	private double rateHeart = 0.06;
+	private double rateStar = 0.01;
 	private boolean statusGame = true;
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
@@ -49,30 +53,91 @@ public class GameEngine implements KeyListener, GameReporter{
 		enemies.add(e);
 	}
 	
+
+	private void generateHeart(){
+		Heart h = new Heart((int)(Math.random()*390), 30);
+		gp.sprites.add(h);
+		heart.add(h);
+	}
+
+	private void generateStar(){
+		Star s = new Star((int)(Math.random()*390), 30);
+		gp.sprites.add(s);
+		star.add(s);
+	}
+
+
 	private void process(){
 		if(Math.random() < difficulty){
 			generateEnemy();
 		}
+
+		if(Math.random() < rateHeart){
+			generateHeart();
+		}
+
+		if(Math.random() < rateStar){
+			generateStar();
+		}
 		
 		Iterator<Enemy> e_iter = enemies.iterator();
+		Iterator<Heart> h_iter = heart.iterator();
+		Iterator<Star> s_iter = star.iterator();
 		while(e_iter.hasNext()){
 			Enemy e = e_iter.next();
 			e.proceed();
-			
 			if(!e.isAlive()){
 				e_iter.remove();
 				gp.sprites.remove(e);
 				score += 100;
 			}
 		}
+
+		while(h_iter.hasNext()){
+			Heart h = h_iter.next();
+			h.proceed();
+			if(!h.isAlive()){
+				h_iter.remove();
+				gp.sprites.remove(h);
+				//score += 200;
+			}
+		}
 		
+		while(s_iter.hasNext()){
+			Star s = s_iter.next();
+			s.proceed();
+			if(!s.isAlive()){
+				s_iter.remove();
+				gp.sprites.remove(s);
+				//score += 200;
+			}
+		}
+
 		gp.updateGameUI(this);
 		
 		Rectangle2D.Double vr = v.getRectangle();
 		Rectangle2D.Double er;
+		Rectangle2D.Double hr;
+		Rectangle2D.Double sr;
 		for(Enemy e : enemies){
 			er = e.getRectangle();
 			if(er.intersects(vr)){
+				//die();
+				return;
+			}
+		}
+
+		for(Heart h : heart){
+			hr = h.getRectangle();
+			if(hr.intersects(vr)){
+				//die();
+				return;
+			}
+		}
+
+		for(Star s : star){
+			sr = s.getRectangle();
+			if(sr.intersects(vr)){
 				//die();
 				return;
 			}

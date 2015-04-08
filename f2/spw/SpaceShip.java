@@ -15,7 +15,7 @@ public class SpaceShip extends Sprite{
 	private String path; 
 	public SpaceShip(int x, int y, int width, int height) {
 		super(x, y, width, height);
-		path = "D:/GitHub/spw/f2/spw/Image/cat.png";//location image
+		path = "f2/spw/Image/cat.png";//location image
 
 		try{
 			image = ImageIO.read(new File(path));//read file cat to image

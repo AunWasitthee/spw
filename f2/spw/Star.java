@@ -9,20 +9,19 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-public class Enemy extends Sprite{
+public class Star extends Sprite{
 	public static final int Y_TO_FADE = 400;
 	public static final int Y_TO_DIE = 600;
-	
-	private int step = 12;
-	private boolean alive = true;
-	
 	private Image image;
 	private String path; 
 
-	public Enemy(int x, int y) {
-		super(x, y, 30, 30);
+	private int step = 12;
+	private boolean alive = true;
 
-		path = "D:/GitHub/spw/f2/spw/Image/bomb1.png";//location image
+	public Star(int x, int y) {
+		super(x, y, 20, 20);
+
+		path = "f2/spw/Image/star.png";//location image
 		try{
 			image = ImageIO.read(new File(path));//read file bomb to image
 
@@ -50,7 +49,7 @@ public class Enemy extends Sprite{
 			alive = false;
 		}
 	}
-	
+
 	public boolean isAlive(){
 		return alive;
 	}
