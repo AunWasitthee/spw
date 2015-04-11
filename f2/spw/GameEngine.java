@@ -1,5 +1,8 @@
 package f2.spw;
 
+import java.awt.Color;
+import java.awt.Graphics;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -15,6 +18,7 @@ public class GameEngine implements KeyListener, GameReporter{
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
+	private ArrayList<Bullet> bullet = new ArrayList<Bullet>();
 	private ArrayList<Heart> heart = new ArrayList<Heart>();	
 	private ArrayList<Star> star = new ArrayList<Star>();	
 	private SpaceShip v;	
@@ -22,9 +26,10 @@ public class GameEngine implements KeyListener, GameReporter{
 	private Timer timer;
 	
 	private long score = 0;
-	private double difficulty = 0.1;
-	private double rateHeart = 0.06;
-	private double rateStar = 0.01;
+	private double difficulty = 0.05;
+	private double rateBullet = 0.1;
+	private double rateHeart = 0.003;
+	private double rateStar = 0.005;
 	private boolean statusGame = true;
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
@@ -66,6 +71,12 @@ public class GameEngine implements KeyListener, GameReporter{
 		star.add(s);
 	}
 
+	private void generateBullet(){
+		Bullet b = new Bullet((v.x)+(v.width/2)-3, v.y);
+		gp.sprites.add(b);
+		bullet.add(b);
+	}
+
 
 	private void process(){
 		if(Math.random() < difficulty){
@@ -79,10 +90,15 @@ public class GameEngine implements KeyListener, GameReporter{
 		if(Math.random() < rateStar){
 			generateStar();
 		}
-		
+
+		// if(Math.random() < rateBullet){
+		// 	generateBullet();
+		// }
+
 		Iterator<Enemy> e_iter = enemies.iterator();
 		Iterator<Heart> h_iter = heart.iterator();
 		Iterator<Star> s_iter = star.iterator();
+		Iterator<Bullet> b_iter = bullet.iterator();
 		while(e_iter.hasNext()){
 			Enemy e = e_iter.next();
 			e.proceed();
@@ -113,12 +129,23 @@ public class GameEngine implements KeyListener, GameReporter{
 			}
 		}
 
+		while(b_iter.hasNext()){
+			Bullet b = b_iter.next();
+			b.proceed();
+			if(!b.isAlive()){
+				b_iter.remove();
+				gp.sprites.remove(b);
+				//score += 100;
+			}
+		}
+
 		gp.updateGameUI(this);
 		
 		Rectangle2D.Double vr = v.getRectangle();
 		Rectangle2D.Double er;
 		Rectangle2D.Double hr;
 		Rectangle2D.Double sr;
+		Rectangle2D.Double br;
 		for(Enemy e : enemies){
 			er = e.getRectangle();
 			if(er.intersects(vr)){
@@ -138,6 +165,15 @@ public class GameEngine implements KeyListener, GameReporter{
 		for(Star s : star){
 			sr = s.getRectangle();
 			if(sr.intersects(vr)){
+				s.getStar();
+				//die();
+				return;
+			}
+		}
+
+		for(Bullet b : bullet){
+			br = b.getRectangle();
+			if(br.intersects(vr)){
 				//die();
 				return;
 			}
@@ -146,6 +182,8 @@ public class GameEngine implements KeyListener, GameReporter{
 	
 	public void die(){
 		timer.stop();
+		gp.big.setColor(Color.WHITE);
+		gp.big.drawString("Game Over", 150, 300);
 	}
 	//Function for pause game.
 	public void pauseGame(){
@@ -176,9 +214,12 @@ public class GameEngine implements KeyListener, GameReporter{
 		case KeyEvent.VK_P:
 			pauseGame();  // Pause Game
 			break;
-		case KeyEvent.VK_D:
-			difficulty += 0.1; // Up level
+		case KeyEvent.VK_SPACE:
+			generateBullet(); // Create Bullet
 			break;
+		// case KeyEvent.VK_D:
+		// 	difficulty += 0.1; // Up level
+		// 	break;
 		}
 	}
 

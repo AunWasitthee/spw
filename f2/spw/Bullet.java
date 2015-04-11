@@ -9,26 +9,25 @@ import java.io.File;
 
 import javax.imageio.ImageIO;
 
-public class Enemy extends Sprite{
-	public static final int Y_TO_FADE = 400;
-	public static final int Y_TO_DIE = 600;
-	
-	private int step = 5;
-	private boolean alive = true;
-	
+public class Bullet extends Sprite{
+	public static final int Y_TO_FADE = 1000;
+	public static final int Y_TO_DIE = 1000;
 	private Image image;
 	private String path; 
 
-	public Enemy(int x, int y) {
-		super(x, y, 30, 30);
+	private int step = 12;
+	private boolean alive = true;
 
-		path = "D:/GitHub/spw/f2/spw/Image/bomb1.png";//location image
-		try{
-			image = ImageIO.read(new File(path));//read file bomb to image
+	public Bullet(int x, int y) {
+		super(x, y, 7, 12);
 
-		}catch(IOException e){//focus input output
-			e.printStackTrace();
-		}// check error for run program
+		// path = "f2/spw/Image/star.png";//location image
+		// try{
+		// 	image = ImageIO.read(new File(path));//read file bomb to image
+
+		// }catch(IOException e){//focus input output
+		// 	e.printStackTrace();
+		// }// check error for run program
 	}
 
 	@Override
@@ -39,18 +38,18 @@ public class Enemy extends Sprite{
 		// 	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 
 		// 			(float)(Y_TO_DIE - y)/(Y_TO_DIE - Y_TO_FADE)));
 		// }
-		// g.setColor(Color.GREEN);
-		// g.fillRect(x, y, width, height);
+		g.setColor(Color.GREEN);
+		g.fillRect(x, y, width, height);
 		g.drawImage(image,x,y,width,height,null);
 	}
 
 	public void proceed(){
-		y += step;
+		y -= step;
 		if(y > Y_TO_DIE){
 			alive = false;
 		}
 	}
-	
+
 	public boolean isAlive(){
 		return alive;
 	}

@@ -53,4 +53,9 @@ public class Star extends Sprite{
 	public boolean isAlive(){
 		return alive;
 	}
+
+	public void getStar(){
+		alive = false;
+		// return alive;
+	}
 }
