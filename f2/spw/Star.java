@@ -46,7 +46,7 @@ public class Star extends Sprite{
 	public void proceed(){
 		y += step;
 		if(y > Y_TO_DIE){
-			alive = false;
+			getStar();
 		}
 	}
 
@@ -56,6 +56,5 @@ public class Star extends Sprite{
 
 	public void getStar(){
 		alive = false;
-		// return alive;
 	}
 }

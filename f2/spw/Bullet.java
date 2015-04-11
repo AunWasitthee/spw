@@ -40,14 +40,18 @@ public class Bullet extends Sprite{
 		// }
 		g.setColor(Color.GREEN);
 		g.fillRect(x, y, width, height);
-		g.drawImage(image,x,y,width,height,null);
+		//g.drawImage(image,x,y,width,height,null);
 	}
 
 	public void proceed(){
 		y -= step;
 		if(y > Y_TO_DIE){
-			alive = false;
+			death();
 		}
+	}
+
+	public void death(){
+		alive = false;
 	}
 
 	public boolean isAlive(){

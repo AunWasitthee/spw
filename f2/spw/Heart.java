@@ -46,8 +46,12 @@ public class Heart extends Sprite{
 	public void proceed(){
 		y += step;
 		if(y > Y_TO_DIE){
-			alive = false;
+			getHeart();
 		}
+	}
+
+	public void getHeart(){
+		alive = false;
 	}
 
 	public boolean isAlive(){

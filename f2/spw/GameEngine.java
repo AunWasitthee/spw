@@ -18,9 +18,9 @@ public class GameEngine implements KeyListener, GameReporter{
 	GamePanel gp;
 		
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
-	private ArrayList<Bullet> bullet = new ArrayList<Bullet>();
-	private ArrayList<Heart> heart = new ArrayList<Heart>();	
-	private ArrayList<Star> star = new ArrayList<Star>();	
+	private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+	private ArrayList<Heart> hearts = new ArrayList<Heart>();	
+	private ArrayList<Star> stars = new ArrayList<Star>();	
 	private SpaceShip v;	
 	
 	private Timer timer;
@@ -62,19 +62,19 @@ public class GameEngine implements KeyListener, GameReporter{
 	private void generateHeart(){
 		Heart h = new Heart((int)(Math.random()*390), 30);
 		gp.sprites.add(h);
-		heart.add(h);
+		hearts.add(h);
 	}
 
 	private void generateStar(){
 		Star s = new Star((int)(Math.random()*390), 30);
 		gp.sprites.add(s);
-		star.add(s);
+		stars.add(s);
 	}
 
 	private void generateBullet(){
 		Bullet b = new Bullet((v.x)+(v.width/2)-3, v.y);
 		gp.sprites.add(b);
-		bullet.add(b);
+		bullets.add(b);
 	}
 
 
@@ -96,9 +96,9 @@ public class GameEngine implements KeyListener, GameReporter{
 		// }
 
 		Iterator<Enemy> e_iter = enemies.iterator();
-		Iterator<Heart> h_iter = heart.iterator();
-		Iterator<Star> s_iter = star.iterator();
-		Iterator<Bullet> b_iter = bullet.iterator();
+		Iterator<Heart> h_iter = hearts.iterator();
+		Iterator<Star> s_iter = stars.iterator();
+		Iterator<Bullet> b_iter = bullets.iterator();
 		while(e_iter.hasNext()){
 			Enemy e = e_iter.next();
 			e.proceed();
@@ -146,38 +146,40 @@ public class GameEngine implements KeyListener, GameReporter{
 		Rectangle2D.Double hr;
 		Rectangle2D.Double sr;
 		Rectangle2D.Double br;
+		//Check Enermy intersect Spaceship and Enermy intersect Bullet
 		for(Enemy e : enemies){
 			er = e.getRectangle();
-			if(er.intersects(vr)){
-				//die();
-				return;
-			}
+			for(Bullet b : bullets){
+				br = b.getRectangle();
+				if(br.intersects(er)){
+					b.death();
+					e.death();
+					return;
+				}
+				if(er.intersects(vr)){
+					//die();
+					return;
+				}
+			}	
 		}
 
-		for(Heart h : heart){
+		for(Heart h : hearts){
 			hr = h.getRectangle();
 			if(hr.intersects(vr)){
-				//die();
+				h.getHeart();
 				return;
 			}
 		}
 
-		for(Star s : star){
+		for(Star s : stars){
 			sr = s.getRectangle();
 			if(sr.intersects(vr)){
 				s.getStar();
-				//die();
 				return;
 			}
 		}
 
-		for(Bullet b : bullet){
-			br = b.getRectangle();
-			if(br.intersects(vr)){
-				//die();
-				return;
-			}
-		}
+		
 	}
 	
 	public void die(){
