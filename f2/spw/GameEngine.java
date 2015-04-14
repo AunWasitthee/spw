@@ -16,13 +16,15 @@ import javax.swing.Timer;
 
 public class GameEngine implements KeyListener, GameReporter{
 	GamePanel gp;
-		
+	
+	private ArrayList<SpaceShip> spaceships = new ArrayList<SpaceShip>();	
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
 	private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 	private ArrayList<Heart> hearts = new ArrayList<Heart>();	
 	private ArrayList<Star> stars = new ArrayList<Star>();	
-	private SpaceShip v;	
-	
+	private SpaceShip v1;	
+	private SpaceShip v2;	
+	private int player;
 	private Timer timer;
 	
 	private long score = 0;
@@ -33,10 +35,11 @@ public class GameEngine implements KeyListener, GameReporter{
 	private boolean statusGame = true;
 	public GameEngine(GamePanel gp, SpaceShip v) {
 		this.gp = gp;
-		this.v = v;		
-		
-		gp.sprites.add(v);
-		
+		this.v1 = v;		
+		this.player = 1;
+		spaceships.add(v1);
+		gp.sprites.add(v1);
+		this.v2 = new SpaceShip(180, 525, 70, 70,2); // Create Player2
 		timer = new Timer(30, new ActionListener() {
 			
 			@Override
@@ -71,7 +74,7 @@ public class GameEngine implements KeyListener, GameReporter{
 		stars.add(s);
 	}
 
-	private void generateBullet(){
+	private void generateBullet(SpaceShip v){
 		Bullet b = new Bullet((v.x)+(v.width/2)-3, v.y);
 		gp.sprites.add(b);
 		bullets.add(b);
@@ -94,11 +97,20 @@ public class GameEngine implements KeyListener, GameReporter{
 		// if(Math.random() < rateBullet){
 		// 	generateBullet();
 		// }
-
+		Iterator<SpaceShip> ship_iter = spaceships.iterator();
 		Iterator<Enemy> e_iter = enemies.iterator();
 		Iterator<Heart> h_iter = hearts.iterator();
 		Iterator<Star> s_iter = stars.iterator();
 		Iterator<Bullet> b_iter = bullets.iterator();
+		while(ship_iter.hasNext()){
+			SpaceShip ship = ship_iter.next();
+			if(!ship.isAlive()){
+				ship_iter.remove();
+				gp.sprites.remove(ship);
+				score += 100;
+			}
+		}
+
 		while(e_iter.hasNext()){
 			Enemy e = e_iter.next();
 			e.proceed();
@@ -141,7 +153,8 @@ public class GameEngine implements KeyListener, GameReporter{
 
 		gp.updateGameUI(this);
 		
-		Rectangle2D.Double vr = v.getRectangle();
+		Rectangle2D.Double vr1 = v1.getRectangle();
+		Rectangle2D.Double vr2 = v2.getRectangle();
 		Rectangle2D.Double er;
 		Rectangle2D.Double hr;
 		Rectangle2D.Double sr;
@@ -151,21 +164,39 @@ public class GameEngine implements KeyListener, GameReporter{
 			er = e.getRectangle();
 			for(Bullet b : bullets){
 				br = b.getRectangle();
+				//Check Enermy and bullet
 				if(br.intersects(er)){
 					b.death();
 					e.death();
-					return;
 				}
-				if(er.intersects(vr)){
-					//die();
-					return;
+			}
+
+			//Check Enermy and player1
+			if(er.intersects(vr1)){
+				v1.death();
+				e.death();
+			}
+
+			//Check Enermy and player2
+			if(v2.isAlive()){
+				if(er.intersects(vr2)){
+					v2.death();
+					e.death();
 				}
-			}	
+			}
+
 		}
+	 
+		//Check Gameover
+		if(!v1.isAlive() && !v2.isAlive()){
+			die();
+			return;
+		}	
+
 
 		for(Heart h : hearts){
 			hr = h.getRectangle();
-			if(hr.intersects(vr)){
+			if(hr.intersects(vr1)){
 				h.getHeart();
 				return;
 			}
@@ -173,7 +204,7 @@ public class GameEngine implements KeyListener, GameReporter{
 
 		for(Star s : stars){
 			sr = s.getRectangle();
-			if(sr.intersects(vr)){
+			if(sr.intersects(vr1)){
 				s.getStar();
 				return;
 			}
@@ -202,22 +233,55 @@ public class GameEngine implements KeyListener, GameReporter{
 	void controlVehicle(KeyEvent e) {
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_LEFT:
-			v.move(-1,0);  // Move Left
+			v1.move(-1,0);  // Move Left Player1
 			break;
 		case KeyEvent.VK_RIGHT:
-			v.move(1,0);  // Move Right
+			v1.move(1,0);  // Move Right Player1
 			break;
 		case KeyEvent.VK_UP:
-			v.move(0,-1);  // Move Up
+			v1.move(0,-1);  // Move Up Player1
 			break;
 		case KeyEvent.VK_DOWN:
-			v.move(0,1);  // Move Down
+			v1.move(0,1);  // Move Down Player1
 			break;
 		case KeyEvent.VK_P:
 			pauseGame();  // Pause Game
 			break;
+		case KeyEvent.VK_L:
+			generateBullet(v1); // Create Bullet Player1
+			break;
 		case KeyEvent.VK_SPACE:
-			generateBullet(); // Create Bullet
+			if(this.player < 2){
+				v2.born();
+				spaceships.add(v2);
+				gp.sprites.add(v2);
+				this.player++;
+			}
+			break;
+		case KeyEvent.VK_A:
+			if(v2.isAlive()){
+				v2.move(-1,0);  // Move Left Player2
+			}
+		 	break;
+		 case KeyEvent.VK_D:
+			if(v2.isAlive()){
+				v2.move(1,0);  // Move Right Player2
+			}
+		 	break;
+		 case KeyEvent.VK_W:
+			if(v2.isAlive()){
+				v2.move(0,-1);  // Move Up Player2
+			}
+		 	break;
+		 case KeyEvent.VK_S:
+			if(v2.isAlive()){
+				v2.move(0,1);  // Move Down Player2
+			}
+		 	break;
+		 case KeyEvent.VK_G:
+		 	if(v2.isAlive()){
+				generateBullet(v2); // Create Bullet Player2
+			}
 			break;
 		// case KeyEvent.VK_D:
 		// 	difficulty += 0.1; // Up level

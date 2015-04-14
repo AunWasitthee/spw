@@ -12,14 +12,22 @@ public class SpaceShip extends Sprite{
 
 	int step = 8;
 	private Image image;
-	private String path; 
-	public SpaceShip(int x, int y, int width, int height) {
+	private String path;
+	private boolean alive;
+	public SpaceShip(int x, int y, int width, int height,int player) {
 		super(x, y, width, height);
-		path = "f2/spw/Image/cat.png";//location image
+		//Select image for player
+		if(player == 1){
+			path = "f2/spw/Image/cat.png";//location image player1 
+			alive = true;
+		}
+		else{
+			path = "f2/spw/Image/dog.png";//location image player2
+			alive = false;
+		}
 
 		try{
 			image = ImageIO.read(new File(path));//read file cat to image
-
 		}catch(IOException e){//focus input output
 			e.printStackTrace();
 		}// check error for run program
@@ -27,8 +35,6 @@ public class SpaceShip extends Sprite{
 	//function draw graphic Spaceship
 	@Override
 	public void draw(Graphics2D g) {
-		// g.setColor(Color.WHITE);
-		// g.fillRect(x, y, width, height);
 		g.drawImage(image,x,y,width,height,null);
 	}
 	//Funcytion move Space ship
@@ -51,4 +57,16 @@ public class SpaceShip extends Sprite{
 			y = 600 - height;
 	}
 
+	public void death(){
+		alive = false;
+	}
+
+	public void born(){
+		alive = true;
+	}
+
+	public boolean isAlive(){
+		return alive;
+	}
+	
 }
