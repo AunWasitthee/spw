@@ -17,18 +17,23 @@ public class Enemy extends Sprite{
 	private boolean alive = true;
 	
 	private Image image;
-	private String path; 
+	private String path = "f2/spw/Image/bomb1.png";//location image;
+
+	private String path2 = "f2/spw/Image/explosion.png";//location image;
+	private boolean explosion;
 
 	public Enemy(int x, int y) {
 		super(x, y, 30, 30);
 
-		path = "D:/GitHub/spw/f2/spw/Image/bomb1.png";//location image
+		
 		try{
 			image = ImageIO.read(new File(path));//read file bomb to image
 
 		}catch(IOException e){//focus input output
 			e.printStackTrace();
 		}// check error for run program
+
+		explosion = false;
 	}
 
 	@Override
@@ -45,9 +50,11 @@ public class Enemy extends Sprite{
 	}
 
 	public void proceed(){
-		y += step;
-		if(y > Y_TO_DIE){
-			death();
+		if(!explosion){
+			y += step;
+			if(y > Y_TO_DIE){
+				death();
+			}
 		}
 	}
 
@@ -57,5 +64,21 @@ public class Enemy extends Sprite{
 	
 	public boolean isAlive(){
 		return alive;
+	}
+
+	public void setexplosion(){
+		
+		try{
+			image = ImageIO.read(new File(path2));//read file bomb to image
+
+		}catch(IOException e){//focus input output
+			e.printStackTrace();
+		}// check error for run program
+
+		explosion = true;
+	}
+
+	public boolean isExplosion(){
+		return explosion;
 	}
 }

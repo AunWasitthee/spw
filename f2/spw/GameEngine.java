@@ -119,6 +119,11 @@ public class GameEngine implements KeyListener, GameReporter{
 				gp.sprites.remove(e);
 				score += 100;
 			}
+			else if(e.isExplosion()){
+				e.death();
+				//gp.sprites.remove(e);
+				//score += 100;
+			}
 		}
 
 		while(h_iter.hasNext()){
@@ -165,9 +170,11 @@ public class GameEngine implements KeyListener, GameReporter{
 			for(Bullet b : bullets){
 				br = b.getRectangle();
 				//Check Enermy and bullet
-				if(br.intersects(er)){
+				if(br.intersects(er) && (!e.isExplosion())){
 					b.death();
-					e.death();
+					e.setexplosion();
+					gp.updateGameUI(this);
+					// e.death();
 				}
 			}
 
@@ -209,7 +216,6 @@ public class GameEngine implements KeyListener, GameReporter{
 				return;
 			}
 		}
-
 		
 	}
 	
