@@ -32,11 +32,13 @@ public class SpaceShip extends Sprite{
 			e.printStackTrace();
 		}// check error for run program
 	}
+
 	//function draw graphic Spaceship
 	@Override
 	public void draw(Graphics2D g) {
 		g.drawImage(image,x,y,width,height,null);
 	}
+
 	//Funcytion move Space ship
 	public void move(int directionX, int directionY){
 
@@ -57,14 +59,32 @@ public class SpaceShip extends Sprite{
 			y = 600 - height;
 	}
 
+	//Function get X-Position Spaceship
+	public int getXPos(){
+		return x;
+	}
+
+	//Function get Y-Position Spaceship
+	public int getYPos(){
+		return y;
+	}
+
+	//Function get Width Spaceship
+	public int getWidth(){
+		return width;
+	}
+
+	//Function set Spaceship die
 	public void death(){
 		alive = false;
 	}
 
+	//Function set Spaceship born
 	public void born(){
 		alive = true;
 	}
 
+	//Function get status Spacship
 	public boolean isAlive(){
 		return alive;
 	}

@@ -75,7 +75,7 @@ public class GameEngine implements KeyListener, GameReporter{
 	}
 
 	private void generateBullet(SpaceShip v){
-		Bullet b = new Bullet((v.x)+(v.width/2)-3, v.y);
+		Bullet b = new Bullet((v.getXPos())+(v.getWidth()/2)-3, v.getYPos());
 		gp.sprites.add(b);
 		bullets.add(b);
 	}
@@ -235,6 +235,7 @@ public class GameEngine implements KeyListener, GameReporter{
 		}
 		
 	}
+
 	//function control game for user's input (keyboard)
 	void controlVehicle(KeyEvent e) {
 		switch (e.getKeyCode()) {

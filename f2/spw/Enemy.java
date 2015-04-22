@@ -24,8 +24,6 @@ public class Enemy extends Sprite{
 
 	public Enemy(int x, int y) {
 		super(x, y, 30, 30);
-
-		
 		try{
 			image = ImageIO.read(new File(path));//read file bomb to image
 
