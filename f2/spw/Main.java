@@ -20,7 +20,9 @@ public class Main {
 	SpaceShip v;
 	GamePanel gp;
 	GameEngine engine;
+	
 	public Main(){
+		
 		//Setting Main's frame
 		frame = new JFrame("Space War Menu");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -39,7 +41,7 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent evt) {
             	//Create Spaceship, GamePanel, Game Engine
-				v = new SpaceShip(180, 525, 70, 70,1);
+				v = new SpaceShip(180, 525, 50, 50,1);
 				gp = new GamePanel();
 				engine = new GameEngine(gp, v);
 
@@ -78,9 +80,11 @@ public class Main {
         //add button's panel to Main frame
         frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);
         frame.setVisible(true);
+	
 	}
 		
 	public static void main(String[] args){
+		//Create Main Class
 		new Main();
 	}
 }

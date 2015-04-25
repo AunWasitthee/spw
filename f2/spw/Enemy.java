@@ -6,7 +6,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 
 public class Enemy extends Sprite{
@@ -15,11 +14,10 @@ public class Enemy extends Sprite{
 	
 	private int step = 5;
 	private boolean alive = true;
-	
+	private int timeBomb = 13;
 	private Image image;
-	private String path = "f2/spw/Image/bomb1.png";//location image;
-
-	private String path2 = "f2/spw/Image/explosion.png";//location image;
+	private String path = "f2/spw/Image/bomb1.png";//location image
+	private String path2 = "f2/spw/Image/explosion.png";//location image
 	private boolean explosion;
 
 	public Enemy(int x, int y) {
@@ -34,48 +32,56 @@ public class Enemy extends Sprite{
 		explosion = false;
 	}
 
+	//Function for draw graphic
 	@Override
 	public void draw(Graphics2D g) {
-		// if(y < Y_TO_FADE)
-		// 	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-		// else{
-		// 	g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 
-		// 			(float)(Y_TO_DIE - y)/(Y_TO_DIE - Y_TO_FADE)));
-		// }
-		// g.setColor(Color.GREEN);
+		// g.setColor(Color.RED);
 		// g.fillRect(x, y, width, height);
 		g.drawImage(image,x,y,width,height,null);
 	}
 
 	public void proceed(){
+		//Check bomb or not?
 		if(!explosion){
 			y += step;
 			if(y > Y_TO_DIE){
 				death();
 			}
 		}
+		else{
+			timeBomb--; //reduce time to show bomb
+			y++;
+		}
+
+		//Check bomb shoe timeout
+		if(timeBomb == 0){
+			death();
+		}
 	}
 
+	//Function set Enermy to die
 	public void death(){
 		alive = false;
 	}
-	
+
+	//Function get status Enermy
 	public boolean isAlive(){
 		return alive;
 	}
 
+	//Function Changepicture Enermey to bomb and set status explosion
 	public void setexplosion(){
-		
 		try{
 			image = ImageIO.read(new File(path2));//read file bomb to image
-
 		}catch(IOException e){//focus input output
 			e.printStackTrace();
 		}// check error for run program
 
+		//set status explosion bomb
 		explosion = true;
 	}
 
+	//Function get explosionstatus Enermy
 	public boolean isExplosion(){
 		return explosion;
 	}

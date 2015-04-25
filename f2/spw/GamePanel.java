@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-
 import javax.swing.JPanel;
 
 public class GamePanel extends JPanel {
@@ -16,15 +15,17 @@ public class GamePanel extends JPanel {
 
 	public GamePanel() {
 		bi = new BufferedImage(400, 600, BufferedImage.TYPE_INT_ARGB);
-		big = (Graphics2D) bi.getGraphics();
-		big.setBackground(Color.GRAY);
+		big = (Graphics2D) bi.getGraphics(); //create pen fpr drawing
+		big.setBackground(Color.GRAY); //set color
 	}
 
+	//Function for draw GUI
 	public void updateGameUI(GameReporter reporter){
-		big.clearRect(0, 0, 400, 600);
-		
-		big.setColor(Color.WHITE);		
-		big.drawString(String.format("%08d", reporter.getScore()), 300, 20);
+		big.clearRect(0, 0, 400, 600); //clear pannel
+		big.setColor(Color.WHITE); // set pen color
+		big.drawString(String.format("%08d", reporter.getScore()), 300, 20); //draw score
+
+		//loop for draw object which is extends Sprite
 		for(Sprite s : sprites){
 			s.draw(big);
 		}

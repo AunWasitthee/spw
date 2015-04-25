@@ -5,15 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.IOException;
 import java.io.File;
-
 import javax.imageio.ImageIO;
 
 public class SpaceShip extends Sprite{
-
 	int step = 8;
 	private Image image;
 	private String path;
 	private boolean alive;
+	
 	public SpaceShip(int x, int y, int width, int height,int player) {
 		super(x, y, width, height);
 		//Select image for player
@@ -36,6 +35,8 @@ public class SpaceShip extends Sprite{
 	//function draw graphic Spaceship
 	@Override
 	public void draw(Graphics2D g) {
+		// g.setColor(Color.GREEN);
+		// g.fillRect(x, y, width, height);
 		g.drawImage(image,x,y,width,height,null);
 	}
 
@@ -72,6 +73,11 @@ public class SpaceShip extends Sprite{
 	//Function get Width Spaceship
 	public int getWidth(){
 		return width;
+	}
+
+	//Function get Height Spaceship
+	public int getHeight(){
+		return height;
 	}
 
 	//Function set Spaceship die
