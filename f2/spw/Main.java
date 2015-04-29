@@ -15,35 +15,66 @@ public class Main {
 	JFrame frame = null;
 	JFrame frameGame = null;
 	JPanel buttonPanel;
-	JButton bt_start;
+	JButton bt_1player;
+	JButton bt_2player;
 	JButton bt_exit;;
 	SpaceShip v;
+	SpaceShip v2;
+
 	GamePanel gp;
 	GameEngine engine;
 	
 	public Main(){
 		
 		//Setting Main's frame
-		frame = new JFrame("Space War Menu");
+		frame = new JFrame("Space War");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(400, 650);
 		frame.getContentPane().setLayout(new BorderLayout());
 
 		//Setting button's panel
 		buttonPanel = new JPanel();
-        buttonPanel.setLayout(new GridLayout(2, 1));
+        buttonPanel.setLayout(new GridLayout(3, 1));
         buttonPanel.setPreferredSize(new Dimension(500, 600));
         buttonPanel.setMaximumSize(new Dimension(500, 600));
 
         //Setting button start
-		bt_start = new JButton("Start Game");
-		bt_start.addActionListener(new ActionListener() {
+		bt_1player = new JButton("1 Player");
+		bt_1player.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent evt) {
             	//Create Spaceship, GamePanel, Game Engine
 				v = new SpaceShip(180, 525, 50, 50,1);
 				gp = new GamePanel();
 				engine = new GameEngine(gp, v);
+
+				//Remove button's panel from Main frame
+				frame.getContentPane().remove(buttonPanel);
+
+				//add KeyListener and GamePanel to Main frame
+				frame.addKeyListener(engine);
+				frame.getContentPane().add(gp,BorderLayout.CENTER);
+
+				//Start timmer
+				engine.start();
+
+				//Setting MainFrame and re-panting
+				frame.validate();
+				frame.repaint();
+
+				//Eable KeyListener
+				frame.requestFocus();
+            }
+        });
+		bt_2player = new JButton("2 Player");
+		bt_2player.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+            	//Create Spaceship, GamePanel, Game Engine
+				v = new SpaceShip(180, 525, 50, 50,1);
+				v2 = new SpaceShip(180, 525, 50, 50,2); // Create Player2
+				gp = new GamePanel();
+				engine = new GameEngine(gp, v, v2);
 
 				//Remove button's panel from Main frame
 				frame.getContentPane().remove(buttonPanel);
@@ -74,7 +105,8 @@ public class Main {
         });
 
         //add button to button's panel
-        buttonPanel.add(bt_start);
+        buttonPanel.add(bt_1player);
+        buttonPanel.add(bt_2player);
         buttonPanel.add(bt_exit);
 
         //add button's panel to Main frame
