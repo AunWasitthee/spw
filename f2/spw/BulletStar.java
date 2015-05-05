@@ -8,19 +8,19 @@ import java.io.IOException;
 import java.io.File;
 import javax.imageio.ImageIO;
 
-public class BulletDog extends Sprite{
-	public static final int Y_TO_FADE = 1000;
-	public static final int Y_TO_DIE = 20;
+public class BulletStar extends Sprite{
+	public static final int Y_TO_FADE = 0;
+	public static final int Y_TO_DIE = 30;
 	private Image image;
-	private String path = "f2/spw/Image/dogbone.png";//location image; 
+	private String path = "f2/spw/Image/star.png";//location image; 
 
 	private int step = 12;
 	private boolean alive = true;
 
-	public BulletDog(int x, int y) {
-		super(x, y, 20, 20);
+	public BulletStar(int x, int y) {
+		super(x, y, 50, 50);
 		try{
-			image = ImageIO.read(new File(path));//read file dogbone to image
+			image = ImageIO.read(new File(path));//read file star to image
 
 		}catch(IOException e){//focus input output
 			e.printStackTrace();
@@ -37,17 +37,18 @@ public class BulletDog extends Sprite{
 
 	public void proceed(){
 		y -= step;
+
 		if(y < Y_TO_DIE){
 			death();
 		}
 	}
 
-	//Function set Bullet to die
+	//Function set Bulletfish to die
 	public void death(){
 		alive = false;
 	}
 
-	//Function get status Bullet
+	//Function get status Bulletfish
 	public boolean isAlive(){
 		return alive;
 	}

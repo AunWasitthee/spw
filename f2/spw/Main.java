@@ -29,7 +29,7 @@ public class Main {
 		//Setting Main's frame
 		frame = new JFrame("Space War");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(400, 650);
+		frame.setSize(650, 620);
 		frame.getContentPane().setLayout(new BorderLayout());
 
 		//Setting button's panel
@@ -44,9 +44,12 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent evt) {
             	//Create Spaceship, GamePanel, Game Engine
-				v = new SpaceShip(180, 525, 50, 50,1);
+				v = new SpaceShip(180, 525, 50, 50,1);	// Create Player1
+				v2 = new SpaceShip(180, 525, 50, 50,2); // Create Player2
 				gp = new GamePanel();
-				engine = new GameEngine(gp, v);
+				//New Game Single mode
+				engine = new GameEngine(gp, v, v2,1);
+
 
 				//Remove button's panel from Main frame
 				frame.getContentPane().remove(buttonPanel);
@@ -71,10 +74,11 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent evt) {
             	//Create Spaceship, GamePanel, Game Engine
-				v = new SpaceShip(180, 525, 50, 50,1);
-				v2 = new SpaceShip(180, 525, 50, 50,2); // Create Player2
+				v = new SpaceShip(120, 525, 50, 50,1);	// Create Player1
+				v2 = new SpaceShip(230, 525, 50, 50,2); // Create Player2
 				gp = new GamePanel();
-				engine = new GameEngine(gp, v, v2);
+				//New Game 2 players mode
+				engine = new GameEngine(gp, v, v2,2);
 
 				//Remove button's panel from Main frame
 				frame.getContentPane().remove(buttonPanel);

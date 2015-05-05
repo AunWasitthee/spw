@@ -16,6 +16,7 @@ public class Star extends Sprite{
 	private String path; 
 	private int step = 12;
 	private boolean alive = true;
+	
 
 	public Star(int x, int y) {
 		super(x, y, 20, 20);

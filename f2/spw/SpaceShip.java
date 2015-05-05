@@ -12,9 +12,13 @@ public class SpaceShip extends Sprite{
 	private Image image;
 	private String path;
 	private boolean alive;
+	private int hp;
+	private int numbulletStar;
 	
 	public SpaceShip(int x, int y, int width, int height,int player) {
 		super(x, y, width, height);
+		hp = 100;
+		numbulletStar = 0;
 		//Select image for player
 		if(player == 1){
 			path = "f2/spw/Image/cat.png";//location image player1 
@@ -94,5 +98,36 @@ public class SpaceShip extends Sprite{
 	public boolean isAlive(){
 		return alive;
 	}
+
+	//Function minus HP Spaceship
+	public void minusHP(int num){
+		hp -= num;
+	}
+
+	//Function plus HP Spaceship
+	public void plusHP(int num){
+		if(hp+num <= 100){
+			hp += num;
+		}
+	}
+
+	//Function get HP Spaceship
+	public int getHP(){
+		return hp;
+	}
 	
+	//Function minus BulletStar
+	public void minusNumbulletStar(){
+		numbulletStar--;
+	}
+
+	//Function plus BulletStar
+	public void plusNumbulletStar(){
+		numbulletStar++;
+	}
+
+	//Function get BulletStar
+	public int getNumbulletStar(){
+		return numbulletStar;
+	}
 }

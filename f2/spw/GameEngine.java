@@ -18,6 +18,7 @@ public class GameEngine implements KeyListener, GameReporter{
 	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();	
 	private ArrayList<BulletCat> bulletCats = new ArrayList<BulletCat>();
 	private ArrayList<BulletDog> bulletDogs = new ArrayList<BulletDog>();
+	private ArrayList<BulletStar> bulletStar = new ArrayList<BulletStar>();
 	private ArrayList<Heart> hearts = new ArrayList<Heart>();	
 	private ArrayList<Star> stars = new ArrayList<Star>();	
 	private int player;
@@ -31,38 +32,20 @@ public class GameEngine implements KeyListener, GameReporter{
 	private double rateStar = 0.005;
 	private boolean statusGame = true;
 
-
-	public GameEngine(GamePanel gp, SpaceShip v) {
-		this.gp = gp;
-		this.v1 = v;		
-		this.player = 1;
-		spaceships.add(v1);
-		gp.sprites.add(v1);
-		// this.v2 = v2;
-		// v2 = new SpaceShip(180, 525, 50, 50,2); // Create Player2
-
-		//Timer for run process game
-		timer = new Timer(30, new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				process();
-			}
-		});
-
-		//Set timer do duplicate
-		timer.setRepeats(true);
-	}
-	public GameEngine(GamePanel gp, SpaceShip v1, SpaceShip v2) {
+	public GameEngine(GamePanel gp, SpaceShip v1, SpaceShip v2,int player) {
 		this.gp = gp;
 		this.v1 = v1;	
 		this.v2 = v2;	
-		this.player = 2;
+		this.player = player;
+
 		spaceships.add(v1);
 		gp.sprites.add(v1);
-		v2.born();
-		spaceships.add(v2);
-		gp.sprites.add(v2);
-		
+		//Check 2 player mode or not
+		if(player == 2){
+			v2.born();
+			spaceships.add(v2);
+			gp.sprites.add(v2);
+		}
 		// v2 = new SpaceShip(180, 525, 50, 50,2); // Create Player2
 
 		//Timer for run process game
@@ -96,6 +79,7 @@ public class GameEngine implements KeyListener, GameReporter{
 
 	//Function stoptimer and write "Game Over" when gameover
 	public void die(){
+
 		timer.stop();
 		gp.big.setColor(Color.WHITE);
 		gp.big.drawString("Game Over", 150, 300);		
@@ -103,21 +87,21 @@ public class GameEngine implements KeyListener, GameReporter{
 	
 	//Function for create Enermy
 	private void generateEnemy(){
-		Enemy e = new Enemy((int)(Math.random()*390-30), 30);
+		Enemy e = new Enemy((int)(Math.random()*390), 30);
 		gp.sprites.add(e);
 		enemies.add(e);
 	}
 
 	//Function for create Heart
 	private void generateHeart(){
-		Heart h = new Heart((int)(Math.random()*390-20), 30);
+		Heart h = new Heart((int)(Math.random()*390), 30);
 		gp.sprites.add(h);
 		hearts.add(h);
 	}
 
 	//Function for create Star
 	private void generateStar(){
-		Star s = new Star((int)(Math.random()*390-20), 30);
+		Star s = new Star((int)(Math.random()*390), 30);
 		gp.sprites.add(s);
 		stars.add(s);
 	}
@@ -127,6 +111,16 @@ public class GameEngine implements KeyListener, GameReporter{
 		BulletCat bc = new BulletCat((v.getXPos())+(v.getWidth()/2)-12, v.getYPos());
 		gp.sprites.add(bc);
 		bulletCats.add(bc);
+	}
+
+	//Function for create bulletStar of Spaceship
+	private void generateBulletStar(SpaceShip v){
+		if(v.getNumbulletStar() > 0){
+			BulletStar bs = new BulletStar((v.getXPos())+(v.getWidth()/2)-25, v.getYPos());
+			gp.sprites.add(bs);
+			bulletStar.add(bs);
+			v.minusNumbulletStar();
+		}
 	}
 
 	//Function for create bulletDog of Spaceship
@@ -160,6 +154,7 @@ public class GameEngine implements KeyListener, GameReporter{
 		Iterator<Star> s_iter = stars.iterator();
 		Iterator<BulletCat> bc_iter = bulletCats.iterator();
 		Iterator<BulletDog> bd_iter = bulletDogs.iterator();
+		Iterator<BulletStar> bs_iter = bulletStar.iterator();
 
 		//Loop check status of Spaceship for drawing
 		while(ship_iter.hasNext()){
@@ -177,7 +172,7 @@ public class GameEngine implements KeyListener, GameReporter{
 			if(!e.isAlive()){
 				e_iter.remove();
 				gp.sprites.remove(e);
-				score += 100;
+				//score += 100;
 			}
 		}
 
@@ -208,6 +203,7 @@ public class GameEngine implements KeyListener, GameReporter{
 			if(!bc.isAlive()){
 				bc_iter.remove();
 				gp.sprites.remove(bc);
+				score += 100;
 			}
 		}
 
@@ -218,6 +214,18 @@ public class GameEngine implements KeyListener, GameReporter{
 			if(!bd.isAlive()){
 				bd_iter.remove();
 				gp.sprites.remove(bd);
+				score += 100;
+			}
+		}
+
+		//Loop check status of BulletStar for drawing
+		while(bs_iter.hasNext()){
+			BulletStar bs = bs_iter.next();
+			bs.proceed();
+			if(!bs.isAlive()){
+				bs_iter.remove();
+				gp.sprites.remove(bs);
+				//score += 100;
 			}
 		}
 
@@ -231,6 +239,7 @@ public class GameEngine implements KeyListener, GameReporter{
 		Rectangle2D.Double sr;
 		Rectangle2D.Double bcr;
 		Rectangle2D.Double bdr;
+		Rectangle2D.Double bsr;
 
 		//Check Enermy intersect Spaceship and Enermy intersect BulletDog
 		for(Enemy e : enemies){
@@ -253,17 +262,33 @@ public class GameEngine implements KeyListener, GameReporter{
 				}
 			}
 
+			for(BulletStar bs : bulletStar){
+				bsr = bs.getRectangle();
+				//Check Enermy and bulletDog
+				if(bsr.intersects(er) && (!e.isExplosion())){
+					//bd.death();
+					e.setexplosion();
+					score += 50;
+				}
+			}
+
 			//Check Enermy and player1
 			if(er.intersects(vr1)){
-				//v1.death();
+				v1.minusHP(10);
 				e.death();
+				if(v1.getHP() == 0){
+					v1.death();
+				}
 			}
 
 			//Check Enermy and player2
 			if(v2.isAlive()){
 				if(er.intersects(vr2)){
-					//v2.death();
+					v2.minusHP(10);
 					e.death();
+					if(v2.getHP() == 0){
+						v2.death();
+					}
 				}
 			}
 
@@ -271,6 +296,7 @@ public class GameEngine implements KeyListener, GameReporter{
 	 
 		//Check Gameover
 		if(!v1.isAlive() && !v2.isAlive()){
+			gp.drawdata(this);
 			die();
 			return;
 		}	
@@ -278,21 +304,42 @@ public class GameEngine implements KeyListener, GameReporter{
 		//Check Heart intersect Spaceship
 		for(Heart h : hearts){
 			hr = h.getRectangle();
+			//Check Heart and player1
 			if(hr.intersects(vr1)){
 				h.getHeart();
+				v1.plusHP(10);
 				return;
+			}
+
+			//Check Heart and player2
+			if(v2.isAlive()){
+				if(hr.intersects(vr2)){
+					h.getHeart();
+					v2.plusHP(10);
+					return;
+				}
 			}
 		}
 
 		//Check Star intersect Spaceship
 		for(Star s : stars){
 			sr = s.getRectangle();
+			//Check Star and player1
 			if(sr.intersects(vr1)){
 				s.getStar();
+				v1.plusNumbulletStar();
 				return;
 			}
+
+			//Check Star and player2
+			if(v2.isAlive()){
+				if(sr.intersects(vr2)){
+					s.getStar();
+					v2.plusNumbulletStar();
+					return;
+				}
+			}
 		}
-		
 	}
 
 	//function control game for user's input (keyboard)
@@ -321,6 +368,11 @@ public class GameEngine implements KeyListener, GameReporter{
 		case KeyEvent.VK_L:
 			if(v1.isAlive()){
 				generateBulletCat(v1); // Create BulletCat Player1
+			}
+			break;
+		case KeyEvent.VK_K:
+			if(v1.isAlive()){
+				generateBulletStar(v1); // Create BulletCat Player1
 			}
 			break;
 		// case KeyEvent.VK_SPACE:
@@ -359,6 +411,11 @@ public class GameEngine implements KeyListener, GameReporter{
 				generateBulletDog(v2); // Create BulletDog Player2
 			}
 			break;
+		case KeyEvent.VK_H:
+		 	if(v2.isAlive()){
+				generateBulletStar(v2); // Create BulletDog Player2
+			}
+			break;
 		case KeyEvent.VK_P:
 			pauseGame();  // Pause Game
 			break;	
@@ -372,6 +429,27 @@ public class GameEngine implements KeyListener, GameReporter{
 	public long getScore(){
 		return score;
 	}
+
+	public int getplayer(){
+		return player;
+	}
+
+	public int getHpv1(){
+		return v1.getHP();
+	}
+
+	public int getHpv2(){
+		return v2.getHP();
+	}
+
+	public int getnumbulletStar1(){
+		return v1.getNumbulletStar();
+	}
+
+	public int getnumbulletStar2(){
+		return v2.getNumbulletStar();
+	}
+	
 	
 	@Override
 	public void keyPressed(KeyEvent e) {

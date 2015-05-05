@@ -10,7 +10,7 @@ import javax.imageio.ImageIO;
 
 public class BulletCat extends Sprite{
 	public static final int Y_TO_FADE = 1000;
-	public static final int Y_TO_DIE = 1000;
+	public static final int Y_TO_DIE = 20;
 	private Image image;
 	private String path = "f2/spw/Image/fishbone.png";//location image; 
 
@@ -37,7 +37,7 @@ public class BulletCat extends Sprite{
 
 	public void proceed(){
 		y -= step;
-		if(y > Y_TO_DIE){
+		if(y < Y_TO_DIE){
 			death();
 		}
 	}
